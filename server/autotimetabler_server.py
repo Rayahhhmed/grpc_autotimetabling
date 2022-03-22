@@ -1,5 +1,6 @@
 import grpc
 import concurrent
+import json
 from concurrent import futures
 
 import autotimetabler_find
@@ -10,10 +11,17 @@ import autotimetabler_pb2
 class AutoTimetablerServicer(autotimetabler_pb2_grpc.AutoTimetablerServicer):
     def FindBestTimetable(request, context):
         print('Looking for the best timetable!')
-        # request.##### will have your request params
-        # need to run ORTools here!
+        start = request.start
+        end = request.end
+        days = request.end
+        gap = request.gap
+        maxdays = request.maxdays
+        periods_list_serialized = request.periods_list_serialized
+        data = autotimetabler_find.searchOptimalTimetable(
+            start, end, days, gap, maxdays, periods_list_serialized)
         response = autotimetabler_pb2.AutoTimetableResponse()
-        response.message = autotimetabler_find.return_hello()
+
+        response.message = '' if data == None else data
         return response
 
 
