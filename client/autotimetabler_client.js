@@ -1,15 +1,16 @@
 const grpc = require('grpc');
 const messages = require('./autotimetabler_pb');
 const services = require('./autotimetabler_grpc_pb');
+const { stringToSubchannelAddress } = require('@grpc/grpc-js/build/src/subchannel-address');
 
 data = {
-  "start": "9",
-  "end": "19",
-  "days": "134",
-  "gap": "1",
-  "maxdays": "2",
-  "periods": 
-  [
+  start: 9,
+  end: 19,
+  days: "134",
+  gap: 1,
+  maxdays: 2,
+  periods_list_serialized: 
+  `[
     [
       [[5, 11, 12]],
       [[5, 13, 14]],
@@ -117,27 +118,32 @@ data = {
       [[3, 16, 17]],
       [[3, 16, 17]]
     ]
-  ]
+  ]`
 }
 
 
 function main() {
-    const client = new services.AutoTimetablerClient(
+    var client = new services.AutoTimetablerClient(
         'localhost:9995', grpc.credentials.createInsecure());
-        const autoTimetableRequest = new messages.TimetableConstraints();
-        autoTimetableRequest.setStart = data['start'];
-        autoTimetableRequest.setEnd = data['end']; 
-        autoTimetableRequest.setDays = data['days']; 
-        autoTimetableRequest.setGap = data['gap']; 
-        autoTimetableRequest.setMaxDays = data['max'];
-        autoTimetableRequest.setPeriodsListSerialized = data['periods']
-        client.findBestTimetable(autoTimetableRequest, (err, res) => {
-            if (err) {
-                console.log('error was found: ' + err);
-            } else { 
-                console.log('response from python, ' + res);
-            }
-        })
+    var autoTimetableRequest = new messages.TimetableConstraints();
+    autoTimetableRequest.setStart(data['start']);
+    autoTimetableRequest.setEnd(data['end']); 
+    autoTimetableRequest.setDays(data['days']); 
+    autoTimetableRequest.setGap(data['gap']); 
+    autoTimetableRequest.setMaxdays(data['max']);
+    autoTimetableRequest.setPeriodsListSerialized(data['periods_list_serialized'])
+    client.findBestTimetable(autoTimetableRequest, (err, res) => {
+        if (err) {
+            console.log('error was found: ' + err);
+        } else { 
+            const times = res.getTimesList()
+            days = ['na', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+            if (res) {
+            const courses = ['course1', 'course2', 'course3']
+            console.log(times.map((time, i) => courses[i] + ': ' + days[Math.floor(time / 100)] + ' ' + ((time % 100) / 2).toString()))
+          }
+        }
+    })
 
 
 }
