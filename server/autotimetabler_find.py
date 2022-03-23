@@ -101,13 +101,13 @@ def sols(start, end, days, gap, maxdays, periods):
             model.AddDivisionEquality(
                 Days[i],  classStartTimes[i], 100)  # assigns a day
 
+        # for class i in classes, the day of that class, Days[i], equals daysvars[j] for one j
         bools = [[] for _ in range(mxd)]
         for i in range(len(classStartTimes)):
             basename = 'b%i' % i
             for j in range(mxd):
                 bools[j].append(model.NewBoolVar(basename + '%i' % j))
                 model.Add(Days[i] == dayvars[j]).OnlyEnforceIf(bools[j][i])
-
         for i in range(len(classStartTimes)):
             model.AddBoolXOr(bools[j][i] for j in range(mxd))
 
