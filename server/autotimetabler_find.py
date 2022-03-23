@@ -6,30 +6,6 @@ import time
 
 # special class that can be used to generate ALL the solutions
 
-
-class VarArraySolutionPrinter(cp_model.CpSolverSolutionCallback):
-    """Print intermediate solutions."""
-
-    def __init__(self, variables):
-        cp_model.CpSolverSolutionCallback.__init__(self)
-        self.__variables = variables
-        self.__solution_count = 0
-
-    def on_solution_callback(self):
-        self.__solution_count += 1
-        for v in self.__variables:
-            print('%s=%i' % (v, self.Value(v)), end=' ')
-            # print()
-        print()
-
-    def solution_count(self):
-        return self.__solution_count
-
-
-def timeify(num):
-    return f'{int(num // 1)}:{int(num % 1 * 6)}0'
-
-
 # reduces period data
 def redlist(lists):
     l = lists
@@ -49,18 +25,15 @@ def redlist(lists):
 
     return []  # if i just missed something
 
+'''yields solutions'''
+def sols(start, end, days, gap, maxdays, periods):
 
-def sols(data):
+    gap = gap * 2 # minimum break between classes
+    mxd = maxdays if maxdays else len(days)
 
-    # minimum break between classes
-    gap = int(data['gap']) * 2 if data['gap'] else 0
-    mxd = int(data['maxdays']) if data['maxdays'] != '' else len(data['days'])
+    newdata = [redlist(l) for l in periods]  # reduces data
 
-    newdata = [redlist(l) for l in data['periods']]  # reduces data
-    """change the above by removing the lambda"""
-
-    Time = time.time()
-    model = cp_model.CpModel()
+    model = cp_model.CpModel() # start making the constraints model
 
     numCourses = len(newdata)
     normalIter = (i for i in range(numCourses) if not newdata[i][2])
@@ -69,7 +42,7 @@ def sols(data):
     classStartTimes = [model.NewIntVarFromDomain(cp_model.Domain.FromValues(
         newdata[i][1]), 'x%i' % i) for i in normalIter]  # start times
     classIntervals = [model.NewFixedSizeIntervalVar(
-        classStartTimes[i], newdata[i][0] + gap, 'xx%i' % i) for i in normalIter]  # periods as intervals
+        classStartTimes[i], newdata[i][0] + gap, 'xx%i' % i) for i in normalIter]  # periods as intervals (corresponds to starttimes)
 
     for s in specialIter:  # handles classes with two periods across multiple days
         duration, specialperiods, _ = newdata[s]
@@ -96,17 +69,19 @@ def sols(data):
         classStartTimes.insert(s, A)
         classStartTimes.append(B)
 
-    daydom = cp_model.Domain.FromValues([int(i) for i in data['days']])
+    daydom = cp_model.Domain.FromValues([int(i) for i in days])
 
+    # restricts classes to be no earlier than start
     late = []
-    if data['start']:
-        earliest = int(data['start']) * 2
+    if start:
+        earliest = start * 2
         late = [model.NewFixedSizeIntervalVar(
             i * 100, earliest, 'l%i' % i) for i in range(1, 6)]
 
+    # restricts classes to go no later than end
     nolate = []
-    if 'end' in data:
-        latest = int(data['end']) * 2 + gap
+    if end:
+        latest = end * 2 + gap
         nolate = [model.NewFixedSizeIntervalVar(
             i * 100 + latest, 10, 'l%i' % i) for i in range(1, 6)]
 
@@ -114,12 +89,11 @@ def sols(data):
         # within domain of permitted days of the week
         day = model.NewIntVarFromDomain(daydom, 'day')
         for i in classStartTimes:
-            # makes them all on the same day
-            model.AddDivisionEquality(day, i, 100)
+            model.AddDivisionEquality(day, i, 100) # makes them all on the same day
 
     if mxd in [2, 3, 4]:
         Days = [model.NewIntVarFromDomain(daydom, 'day%i' % i) for i in range(
-            len(classStartTimes))]  # mon to fri
+            len(classStartTimes))]  # dummy Day variables
         dayvars = [model.NewIntVarFromDomain(
             daydom, 'dv%i' % i) for i in range(mxd)]
 
@@ -147,46 +121,8 @@ def sols(data):
 
     '''for when you want it to give a solution ↓'''
     status = solver.Solve(model)
-    print('elapsed: ', time.time() - Time)
     print('Status = %s' % solver.StatusName(status))
     if solver.StatusName(status) != 'INFEASIBLE':
-        # return [solver.Value(v) for v in classStartTimes] # includes 2nd period of multi-period courses
-        return [solver.Value(classStartTimes[i]) for i in range(numCourses)]
+        return [solver.Value(classStartTimes[i]) for i in range(numCourses)] # List[int]
     else:
-        return None
-
-    '''for when you want it to get all solutions ↓'''
-    solution_printer = VarArraySolutionPrinter(classStartTimes)
-    # Enumerate all solutions.
-    solver.parameters.enumerate_all_solutions = True
-
-    # prints all
-    status = solver.Solve(model, solution_printer)
-
-    print('Status = %s' % solver.StatusName(status))
-    print('Number of solutions found: %i' % solution_printer.solution_count())
-
-
-def serializeTokens(start, end, days, gap, maxdays, periods):
-    data = {
-        'start': start,
-        'end': end,
-        'days': days,
-        'gap': gap,
-        'maxdays': maxdays,
-        'periods': periods,
-    }
-    return json.loads(data)
-
-
-def searchOptimalTimetable(start, end, days, gap, maxdays, periods):
-    # days = ['na', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
-    # res = sols(serializeTokens(start, end, days, gap, maxdays, periods))
-    str_builder = ''
-    # if res:
-    #     courses = sys.argv[-1][:-5].split('-')
-    #     i = 0
-    #     for day, tim in map(lambda a: (days[a // 100], timeify((a % 100)/2)), res):
-    #         str_builder += f'{courses[i%len(courses)]} {day} {tim}\n'
-    #         i += 1
-    return str_builder
+        return [0]
