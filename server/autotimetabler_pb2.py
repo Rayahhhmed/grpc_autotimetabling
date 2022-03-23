@@ -14,18 +14,45 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x61utotimetabler.proto\"\x7f\n\x14TimetableConstraints\x12\r\n\x05start\x18\x01 \x01(\x05\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x03 \x01(\t\x12\x0b\n\x03gap\x18\x04 \x01(\x05\x12\x0f\n\x07maxdays\x18\x05 \x01(\x05\x12\x1f\n\x17periods_list_serialized\x18\x06 \x01(\t\"&\n\x15\x41utoTimetableResponse\x12\r\n\x05times\x18\x01 \x03(\x02\x32T\n\x0e\x41utoTimetabler\x12\x42\n\x11\x46indBestTimetable\x12\x15.TimetableConstraints\x1a\x16.AutoTimetableResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14\x61utotimetabler.proto\"\xdd\x02\n\x14TimetableConstraints\x12\r\n\x05start\x18\x01 \x01(\x05\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x05\x12\x0c\n\x04\x64\x61ys\x18\x03 \x01(\t\x12\x0b\n\x03gap\x18\x04 \x01(\x05\x12\x0f\n\x07maxdays\x18\x05 \x01(\x05\x12-\n\x07periods\x18\x06 \x03(\x0b\x32\x1c.TimetableConstraints.Period\x1a\xcd\x01\n\x06Period\x12\x33\n\x07\x63lasses\x18\x01 \x03(\x0b\x32\".TimetableConstraints.Period.Class\x1a\x8d\x01\n\x05\x43lass\x12\x44\n\x0cperiodGroups\x18\x01 \x03(\x0b\x32..TimetableConstraints.Period.Class.PeriodGroup\x1a>\n\x0bPeriodGroup\x12\x0b\n\x03\x64\x61y\x18\x01 \x01(\x05\x12\x11\n\tstarttime\x18\x02 \x01(\x02\x12\x0f\n\x07\x65ndtime\x18\x03 \x01(\x02\"&\n\x15\x41utoTimetableResponse\x12\r\n\x05times\x18\x01 \x03(\x02\x32T\n\x0e\x41utoTimetabler\x12\x42\n\x11\x46indBestTimetable\x12\x15.TimetableConstraints\x1a\x16.AutoTimetableResponseb\x06proto3')
 
 
 
 _TIMETABLECONSTRAINTS = DESCRIPTOR.message_types_by_name['TimetableConstraints']
+_TIMETABLECONSTRAINTS_PERIOD = _TIMETABLECONSTRAINTS.nested_types_by_name['Period']
+_TIMETABLECONSTRAINTS_PERIOD_CLASS = _TIMETABLECONSTRAINTS_PERIOD.nested_types_by_name['Class']
+_TIMETABLECONSTRAINTS_PERIOD_CLASS_PERIODGROUP = _TIMETABLECONSTRAINTS_PERIOD_CLASS.nested_types_by_name['PeriodGroup']
 _AUTOTIMETABLERESPONSE = DESCRIPTOR.message_types_by_name['AutoTimetableResponse']
 TimetableConstraints = _reflection.GeneratedProtocolMessageType('TimetableConstraints', (_message.Message,), {
+
+  'Period' : _reflection.GeneratedProtocolMessageType('Period', (_message.Message,), {
+
+    'Class' : _reflection.GeneratedProtocolMessageType('Class', (_message.Message,), {
+
+      'PeriodGroup' : _reflection.GeneratedProtocolMessageType('PeriodGroup', (_message.Message,), {
+        'DESCRIPTOR' : _TIMETABLECONSTRAINTS_PERIOD_CLASS_PERIODGROUP,
+        '__module__' : 'autotimetabler_pb2'
+        # @@protoc_insertion_point(class_scope:TimetableConstraints.Period.Class.PeriodGroup)
+        })
+      ,
+      'DESCRIPTOR' : _TIMETABLECONSTRAINTS_PERIOD_CLASS,
+      '__module__' : 'autotimetabler_pb2'
+      # @@protoc_insertion_point(class_scope:TimetableConstraints.Period.Class)
+      })
+    ,
+    'DESCRIPTOR' : _TIMETABLECONSTRAINTS_PERIOD,
+    '__module__' : 'autotimetabler_pb2'
+    # @@protoc_insertion_point(class_scope:TimetableConstraints.Period)
+    })
+  ,
   'DESCRIPTOR' : _TIMETABLECONSTRAINTS,
   '__module__' : 'autotimetabler_pb2'
   # @@protoc_insertion_point(class_scope:TimetableConstraints)
   })
 _sym_db.RegisterMessage(TimetableConstraints)
+_sym_db.RegisterMessage(TimetableConstraints.Period)
+_sym_db.RegisterMessage(TimetableConstraints.Period.Class)
+_sym_db.RegisterMessage(TimetableConstraints.Period.Class.PeriodGroup)
 
 AutoTimetableResponse = _reflection.GeneratedProtocolMessageType('AutoTimetableResponse', (_message.Message,), {
   'DESCRIPTOR' : _AUTOTIMETABLERESPONSE,
@@ -38,10 +65,16 @@ _AUTOTIMETABLER = DESCRIPTOR.services_by_name['AutoTimetabler']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _TIMETABLECONSTRAINTS._serialized_start=24
-  _TIMETABLECONSTRAINTS._serialized_end=151
-  _AUTOTIMETABLERESPONSE._serialized_start=153
-  _AUTOTIMETABLERESPONSE._serialized_end=191
-  _AUTOTIMETABLER._serialized_start=193
-  _AUTOTIMETABLER._serialized_end=277
+  _TIMETABLECONSTRAINTS._serialized_start=25
+  _TIMETABLECONSTRAINTS._serialized_end=374
+  _TIMETABLECONSTRAINTS_PERIOD._serialized_start=169
+  _TIMETABLECONSTRAINTS_PERIOD._serialized_end=374
+  _TIMETABLECONSTRAINTS_PERIOD_CLASS._serialized_start=233
+  _TIMETABLECONSTRAINTS_PERIOD_CLASS._serialized_end=374
+  _TIMETABLECONSTRAINTS_PERIOD_CLASS_PERIODGROUP._serialized_start=312
+  _TIMETABLECONSTRAINTS_PERIOD_CLASS_PERIODGROUP._serialized_end=374
+  _AUTOTIMETABLERESPONSE._serialized_start=376
+  _AUTOTIMETABLERESPONSE._serialized_end=414
+  _AUTOTIMETABLER._serialized_start=416
+  _AUTOTIMETABLER._serialized_end=500
 # @@protoc_insertion_point(module_scope)

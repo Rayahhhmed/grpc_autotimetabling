@@ -1,13 +1,24 @@
 syntax = "proto3";
 
 
-message TimetableConstraints { 
+message TimetableConstraints {
+    message Period {
+        message Class {
+          message PeriodGroup {
+            int32 day = 1;
+            float starttime = 2;
+            float endtime = 3;
+          }
+          repeated PeriodGroup periodGroups = 1;
+        }
+        repeated Class classes = 1;
+    }
     int32 start = 1;
     int32 end = 2;
     string days = 3;
     int32 gap = 4;
     int32 maxdays = 5;
-    string periods_list_serialized = 6; 
+    repeated Period periods = 6;
 }
 
 message AutoTimetableResponse { 

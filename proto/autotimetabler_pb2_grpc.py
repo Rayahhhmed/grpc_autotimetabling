@@ -31,6 +31,7 @@ class AutoTimetablerServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
+
 def add_AutoTimetablerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'FindBestTimetable': grpc.unary_unary_rpc_method_handler(

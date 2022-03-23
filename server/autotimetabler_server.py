@@ -18,9 +18,12 @@ class AutoTimetablerServicer(autotimetabler_pb2_grpc.AutoTimetablerServicer):
             'end': request.end,
             'days': request.days,
             'gap': request.gap,
-            'maxdays': request.maxdays,
-            'periods': json.loads(request.periods_list_serialized)     
+            'maxdays': request.maxdays
         }
+        # print(data)
+        print(request)
+
+        return autotimetabler_pb2.AutoTimetableResponse(times=[1.1, 1.2, 1.3])
         return autotimetabler_pb2.AutoTimetableResponse(times=autotimetabler_find.sols(data))
 
 
