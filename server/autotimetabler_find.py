@@ -180,9 +180,10 @@ def serializeTokens(start, end, days, gap, maxdays, periods):
 
 
 def searchOptimalTimetable(start, end, days, gap, maxdays, periods):
-    # days = ['na', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
-    # res = sols(serializeTokens(start, end, days, gap, maxdays, periods))
+    days = ['na', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+    res = sols(serializeTokens(start, end, days, gap, maxdays, periods))
     str_builder = ''
+    print(res)
     # if res:
     #     courses = sys.argv[-1][:-5].split('-')
     #     i = 0

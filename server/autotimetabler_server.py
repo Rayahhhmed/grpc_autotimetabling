@@ -17,12 +17,15 @@ class AutoTimetablerServicer(autotimetabler_pb2_grpc.AutoTimetablerServicer):
         gap = request.gap
         maxdays = request.maxdays
         periods_list_serialized = request.periods_list_serialized
-        data = autotimetabler_find.searchOptimalTimetable(
-            start, end, days, gap, maxdays, periods_list_serialized)
-        response = autotimetabler_pb2.AutoTimetableResponse()
 
-        response.message = '' if data == None else data
-        return response
+        print(request.periods_list_serialized)
+
+        # data = autotimetabler_find.searchOptimalTimetable(
+        #     start, end, days, gap, maxdays, periods_list_serialized)
+        # response = autotimetabler_pb2.AutoTimetableResponse()
+
+        # response.message = '' if data == None else json.dumps(data)
+        return 'response'
 
 
 def main():
