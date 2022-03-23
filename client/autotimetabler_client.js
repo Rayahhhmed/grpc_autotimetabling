@@ -129,8 +129,9 @@ function main() {
         autoTimetableRequest.setEnd = data['end']; 
         autoTimetableRequest.setDays = data['days']; 
         autoTimetableRequest.setGap = data['gap']; 
-        autoTimetableRequest.setMaxDays = data['max'];
+        autoTimetableRequest.setMaxDays = data['max'];        
         autoTimetableRequest.setPeriodsListSerialized = data['periods']
+        console.log('request sent!')
         client.findBestTimetable(autoTimetableRequest, (err, res) => {
             if (err) {
                 console.log('error was found: ' + err);
