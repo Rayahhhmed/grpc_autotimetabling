@@ -49,7 +49,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.AutoTimetableResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.AutoTimetableResponse.repeatedFields_, null);
 };
 goog.inherits(proto.AutoTimetableResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -93,7 +93,7 @@ proto.TimetableConstraints.toObject = function(includeInstance, msg) {
   var f, obj = {
     start: jspb.Message.getFieldWithDefault(msg, 1, 0),
     end: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    days: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    days: jspb.Message.getFieldWithDefault(msg, 3, ""),
     gap: jspb.Message.getFieldWithDefault(msg, 4, 0),
     maxdays: jspb.Message.getFieldWithDefault(msg, 5, 0),
     periodsListSerialized: jspb.Message.getFieldWithDefault(msg, 6, "")
@@ -142,7 +142,7 @@ proto.TimetableConstraints.deserializeBinaryFromReader = function(msg, reader) {
       msg.setEnd(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {string} */ (reader.readString());
       msg.setDays(value);
       break;
     case 4:
@@ -201,8 +201,8 @@ proto.TimetableConstraints.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getDays();
-  if (f !== 0) {
-    writer.writeInt32(
+  if (f.length > 0) {
+    writer.writeString(
       3,
       f
     );
@@ -268,20 +268,20 @@ proto.TimetableConstraints.prototype.setEnd = function(value) {
 
 
 /**
- * optional int32 days = 3;
- * @return {number}
+ * optional string days = 3;
+ * @return {string}
  */
 proto.TimetableConstraints.prototype.getDays = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.TimetableConstraints} returns this
  */
 proto.TimetableConstraints.prototype.setDays = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -340,6 +340,13 @@ proto.TimetableConstraints.prototype.setPeriodsListSerialized = function(value) 
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.AutoTimetableResponse.repeatedFields_ = [1];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -371,7 +378,7 @@ proto.AutoTimetableResponse.prototype.toObject = function(opt_includeInstance) {
  */
 proto.AutoTimetableResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    message: jspb.Message.getFieldWithDefault(msg, 1, "")
+    timesList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 1)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -409,8 +416,10 @@ proto.AutoTimetableResponse.deserializeBinaryFromReader = function(msg, reader) 
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setMessage(value);
+      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addTimes(values[i]);
+      }
       break;
     default:
       reader.skipField();
@@ -441,9 +450,9 @@ proto.AutoTimetableResponse.prototype.serializeBinary = function() {
  */
 proto.AutoTimetableResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getMessage();
+  f = message.getTimesList();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writePackedFloat(
       1,
       f
     );
@@ -452,20 +461,39 @@ proto.AutoTimetableResponse.serializeBinaryToWriter = function(message, writer) 
 
 
 /**
- * optional string message = 1;
- * @return {string}
+ * repeated float times = 1;
+ * @return {!Array<number>}
  */
-proto.AutoTimetableResponse.prototype.getMessage = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.AutoTimetableResponse.prototype.getTimesList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedFloatingPointField(this, 1));
 };
 
 
 /**
- * @param {string} value
+ * @param {!Array<number>} value
  * @return {!proto.AutoTimetableResponse} returns this
  */
-proto.AutoTimetableResponse.prototype.setMessage = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+proto.AutoTimetableResponse.prototype.setTimesList = function(value) {
+  return jspb.Message.setField(this, 1, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.AutoTimetableResponse} returns this
+ */
+proto.AutoTimetableResponse.prototype.addTimes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 1, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.AutoTimetableResponse} returns this
+ */
+proto.AutoTimetableResponse.prototype.clearTimesList = function() {
+  return this.setTimesList([]);
 };
 
 
