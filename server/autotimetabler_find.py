@@ -36,15 +36,17 @@ def sols(start, end, days, gap, maxdays, periods):
     model = cp_model.CpModel() # start making the constraints model
 
     numCourses = len(newdata)
-    normalIter = (i for i in range(numCourses) if not newdata[i][2])
-    specialIter = (i for i in range(numCourses) if newdata[i][2])
+    normalClassIndices = list(i for i in range(numCourses) if not newdata[i][2])
 
     classStartTimes = [model.NewIntVarFromDomain(cp_model.Domain.FromValues(
-        newdata[i][1]), 'x%i' % i) for i in normalIter]  # start times
+        newdata[i][1]), 'x%i' % i) for i in normalClassIndices]  # start times
     classIntervals = [model.NewFixedSizeIntervalVar(
-        classStartTimes[i], newdata[i][0] + gap, 'xx%i' % i) for i in normalIter]  # periods as intervals (corresponds to starttimes)
+        classStartTimes[i], newdata[i][0] + gap, 'xx%i' % i) for i in normalClassIndices]  # periods as intervals (corresponds to starttimes)
 
-    for s in specialIter:  # handles classes with two periods across multiple days
+    specialIntervalVars = []
+    for s in range(numCourses):  # handles classes with two periods across multiple days
+        if not newdata[s][2]: continue
+        print('shouldntbehere')
         duration, specialperiods, _ = newdata[s]
         specPerIter = range(len(specialperiods))
         # dummy bools we configure for constraints
@@ -123,6 +125,8 @@ def sols(start, end, days, gap, maxdays, periods):
     status = solver.Solve(model)
     print('Status = %s' % solver.StatusName(status))
     if solver.StatusName(status) != 'INFEASIBLE':
-        return [solver.Value(classStartTimes[i]) for i in range(numCourses)] # List[int]
+        sol = [solver.Value(classStartTimes[i]) for i in range(numCourses)]
+        print(sol)
+        return sol # List[int]
     else:
         return [0]

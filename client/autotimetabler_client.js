@@ -118,13 +118,13 @@ data = {
       [[3, 16, 17]],
       [[3, 16, 17]]
     ]
-  ]`
+  ]` 
 }
 
 
 function main() {
     var client = new services.AutoTimetablerClient(
-        'localhost:9995', grpc.credentials.createInsecure());
+        'localhost:50051', grpc.credentials.createInsecure());
     var autoTimetableRequest = new messages.TimetableConstraints();
     autoTimetableRequest.setStart(data['start']);
     autoTimetableRequest.setEnd(data['end']); 
